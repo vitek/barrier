@@ -1408,6 +1408,9 @@ XWindowsScreen::handleSystemEvent(const Event& event, void*)
 void
 XWindowsScreen::onKeyPress(XKeyEvent& xkey)
 {
+	/* filter out keyboard layout state */
+	xkey.state &= ~0x2000;
+
 	LOG((CLOG_DEBUG1 "event: KeyPress code=%d, state=0x%04x", xkey.keycode, xkey.state));
 	const KeyModifierMask mask = m_keyState->mapModifiersFromX(xkey.state);
 	KeyID key                  = mapKeyFromX(&xkey);
@@ -1453,6 +1456,9 @@ XWindowsScreen::onKeyPress(XKeyEvent& xkey)
 void
 XWindowsScreen::onKeyRelease(XKeyEvent& xkey, bool isRepeat)
 {
+	/* filter out keyboard layout state */
+	xkey.state &= ~0x2000;
+
 	const KeyModifierMask mask = m_keyState->mapModifiersFromX(xkey.state);
 	KeyID key                  = mapKeyFromX(&xkey);
 	if (key != kKeyNone) {
